@@ -4,9 +4,9 @@ public class PauseMenuController : MonoBehaviour
 {
     public GameObject container;
     public static PauseMenuController instance;
-    [SerializeField] Slider masterSlider;
-    [SerializeField] Slider musicSlider;
-    [SerializeField] Slider sfxSlider;
+    // [SerializeField] Slider masterSlider;
+    // [SerializeField] Slider musicSlider;
+    // [SerializeField] Slider sfxSlider;
 
     void Awake()
     {
@@ -22,7 +22,7 @@ public class PauseMenuController : MonoBehaviour
 
     void Start()
     {
-        setSliderValues();
+        // setSliderValues();
     }
 
     void Update()
@@ -46,7 +46,7 @@ public class PauseMenuController : MonoBehaviour
     public void Pause()
     {
         container.SetActive(true);
-        setSliderValues();
+        // setSliderValues();
         Time.timeScale = 0; // Pause the game
     }
 
@@ -69,10 +69,10 @@ public class PauseMenuController : MonoBehaviour
         SceneController.instance.RestartScene();
     }
 
-    void setSliderValues()
-    {
-        masterSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1.0f);
-        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1.0f);
-        sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", 1.0f);
-    }
+    // void setSliderValues()
+    // {
+    //     masterSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1.0f);
+    //     musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1.0f);
+    //     sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", 1.0f);
+    // }
 }

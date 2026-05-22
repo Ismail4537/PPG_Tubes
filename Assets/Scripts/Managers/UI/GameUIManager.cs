@@ -10,6 +10,7 @@ public class GameUIManager : MonoBehaviour
     // [SerializeField] Button nextStageButton;
     void Awake()
     {
+        connectUIObjects();
         if (instance == null)
         {
             instance = this;
@@ -51,7 +52,7 @@ public class GameUIManager : MonoBehaviour
 
     public bool isGameOverScreenActive()
     {
-        Debug.Log("Checking if Game Over screen is active: " + gameOverScreen.activeSelf);
+        // Debug.Log("Checking if Game Over screen is active: " + gameOverScreen.activeSelf);
         return gameOverScreen.activeSelf;
     }
 
@@ -68,6 +69,19 @@ public class GameUIManager : MonoBehaviour
         Debug.Log("Main Menu Button Clicked");
         gameOverScreen.SetActive(false);
         SceneController.instance.ToMainMenu();
+    }
+
+    void connectUIObjects()
+    {
+        Slider timeSlider = GameObject.Find("TimeSlider").GetComponent<Slider>();
+        TextMeshProUGUI timeText = GameObject.Find("TimeText").GetComponent<TextMeshProUGUI>();
+        if (timeSlider == null || timeText == null)
+        {
+            Debug.LogError("TimeSlider or TimeText not found in the scene. Please check the UI setup.");
+            return;
+        }
+        GameManager.instance.timeSlider = timeSlider;
+        GameManager.instance.timeText = timeText;
     }
 
     // public void NextStageBtn()

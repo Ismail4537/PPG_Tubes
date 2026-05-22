@@ -1,9 +1,15 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    public Slider timeSlider;
+    public TextMeshProUGUI timeText;
+    public float timeLimit = 100f;
+    float duration = 100f;
     void Awake()
     {
         if (instance == null)
@@ -19,7 +25,15 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        duration = timeLimit;
+    }
 
+    void Update()
+    {
+        if (SceneManager.GetActiveScene().buildIndex != 0 && !GameUIManager.instance.isGameOverScreenActive())
+        {
+            CountdownTimer();
+        }
     }
 
     public void triggerGameOver()
@@ -27,7 +41,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Game Over Triggered");
         if (GameUIManager.instance.isGameOverScreenActive())
         {
-            Debug.Log("Game Over screen already active, ignoring duplicate trigger.");
+            // Debug.Log("Game Over screen already active, ignoring duplicate trigger.");
             return;
         }
         MusicManager.instance.StopMusicTrack(0.8f);
@@ -55,7 +69,7 @@ public class GameManager : MonoBehaviour
     public void resetGameData()
     {
         Debug.Log("Resetting Game Data");
-        // Reset relevant game data here
+        duration = timeLimit;
 
     }
 
@@ -63,5 +77,16 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Saving Current Stage Data");
         string stageKey = "Stage_" + SceneManager.GetActiveScene().buildIndex;
+    }
+
+    void CountdownTimer()
+    {
+        duration -= Time.deltaTime;
+        timeSlider.value = duration;
+        timeText.text = Mathf.CeilToInt(duration).ToString();
+        if (duration <= 0)
+        {
+            GameManager.instance.triggerGameOver();
+        }
     }
 }
