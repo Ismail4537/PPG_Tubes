@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Pan : MonoBehaviour
 {
-    public float burnTime = 5f;
+    public float completlyBurntTime = 5f;
     [SerializeField] SpriteRenderer eggColour;
     [SerializeField] Color burntColour = new Color(0.25f, 0.12f, 0.05f, 1f);
     [Tooltip("If set, use this curve to control how color changes over time (optional)")]
@@ -16,11 +16,13 @@ public class Pan : MonoBehaviour
     private float holdTimer;
     private Color initialEggColour;
     // Threshold in the cook curve to determine when the egg is considered undercooked vs cooked vs burnt
-    float undercookedThreshold;
+    public float undercookedThreshold;
+    public float minBurntThreshold;
 
     void Awake()
     {
-        undercookedThreshold = burnTime / 2f;
+        undercookedThreshold = completlyBurntTime / 3f;
+        minBurntThreshold = completlyBurntTime / 4 * 3.5f;
         if (eggColour != null)
         {
             initialEggColour = eggColour.color;
@@ -32,7 +34,7 @@ public class Pan : MonoBehaviour
         if (isHolding)
         {
             holdTimer += Time.deltaTime;
-            float t = Mathf.Clamp01(holdTimer / burnTime);
+            float t = Mathf.Clamp01(holdTimer / completlyBurntTime);
             float eval = cookCurve.Evaluate(t);
             if (eggColour != null)
             {
@@ -52,7 +54,7 @@ public class Pan : MonoBehaviour
                 eggColour.color = target;
             }
 
-            if (holdTimer >= burnTime)
+            if (holdTimer >= completlyBurntTime)
             {
                 BurnEgg();
             }
@@ -77,9 +79,13 @@ public class Pan : MonoBehaviour
         {
             UnderCooked();
         }
-        else if (holdTimer < burnTime)
+        else if (holdTimer < minBurntThreshold)
         {
             Cooked();
+        }
+        else
+        {
+            BurnEgg();
         }
         // If holdTimer >= burnTime, the egg is already burned in Update(), so no need to handle it here.
     }
@@ -93,6 +99,7 @@ public class Pan : MonoBehaviour
     {
         Debug.Log("Egg is cooked!");
         eggCooked = true;
+        GameManager.instance.nextMiniGame();
         // You can add additional logic here for when the egg is perfectly cooked
     }
 
@@ -105,7 +112,6 @@ public class Pan : MonoBehaviour
         }
 
         // Ensure final burnt color is applied and stop further cooking updates
-        eggColour.color = burntColour;
         eggBurned = true;
         Debug.Log("Egg burned!");
     }

@@ -9,10 +9,10 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] GameObject gameOverScreen;
     [SerializeField] Slider timeSlider;
     [SerializeField] TextMeshProUGUI timeText;
+    [SerializeField] GameObject[] miniGames;
     // [SerializeField] Button nextStageButton;
     void Awake()
     {
-        connectUIObjects();
         if (instance == null)
         {
             instance = this;
@@ -26,6 +26,8 @@ public class GameUIManager : MonoBehaviour
 
     void Start()
     {
+        connectInGameObjects();
+
         toggleHUD(true);
     }
 
@@ -73,13 +75,12 @@ public class GameUIManager : MonoBehaviour
         SceneController.instance.ToMainMenu();
     }
 
-    void connectUIObjects()
+    void connectInGameObjects()
     {
-        if (timeSlider != null && timeText != null)
-        {
-            GameManager.instance.timeSlider = timeSlider;
-            GameManager.instance.timeText = timeText;
-        }
+        GameManager.instance.setMiniGames(miniGames);
+        GameManager.instance.timeSlider = timeSlider;
+        GameManager.instance.timeText = timeText;
+        timeSlider.maxValue = GameManager.instance.timeLimit;
     }
 
     // public void NextStageBtn()

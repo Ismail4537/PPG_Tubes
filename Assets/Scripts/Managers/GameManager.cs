@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI timeText;
     public float timeLimit = 100f;
     float duration = 100f;
+    GameObject[] miniGames;
+    GameObject currentMiniGame;
     void Awake()
     {
         if (instance == null)
@@ -33,6 +35,27 @@ public class GameManager : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex == 1 && !GameUIManager.instance.isGameOverScreenActive())
         {
             CountdownTimer();
+        }
+    }
+
+    public void setMiniGames(GameObject[] games)
+    {
+        miniGames = games;
+        currentMiniGame = miniGames[0];
+    }
+
+    public void nextMiniGame()
+    {
+        int currentIndex = System.Array.IndexOf(miniGames, currentMiniGame);
+        if (currentIndex >= 0 && currentIndex < miniGames.Length - 1)
+        {
+            currentMiniGame.SetActive(false);
+            currentMiniGame = miniGames[currentIndex + 1];
+            currentMiniGame.SetActive(true);
+        }
+        else
+        {
+            Debug.Log("No more mini-games to load.");
         }
     }
 
