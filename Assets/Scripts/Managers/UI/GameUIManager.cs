@@ -7,6 +7,8 @@ public class GameUIManager : MonoBehaviour
     public static GameUIManager instance;
     [SerializeField] GameObject HUD;
     [SerializeField] GameObject gameOverScreen;
+    [SerializeField] Slider timeSlider;
+    [SerializeField] TextMeshProUGUI timeText;
     // [SerializeField] Button nextStageButton;
     void Awake()
     {
@@ -73,15 +75,11 @@ public class GameUIManager : MonoBehaviour
 
     void connectUIObjects()
     {
-        Slider timeSlider = GameObject.Find("TimeSlider").GetComponent<Slider>();
-        TextMeshProUGUI timeText = GameObject.Find("TimeText").GetComponent<TextMeshProUGUI>();
-        if (timeSlider == null || timeText == null)
+        if (timeSlider != null && timeText != null)
         {
-            Debug.LogError("TimeSlider or TimeText not found in the scene. Please check the UI setup.");
-            return;
+            GameManager.instance.timeSlider = timeSlider;
+            GameManager.instance.timeText = timeText;
         }
-        GameManager.instance.timeSlider = timeSlider;
-        GameManager.instance.timeText = timeText;
     }
 
     // public void NextStageBtn()

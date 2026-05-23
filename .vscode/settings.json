@@ -56,5 +56,14 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "PPG_Tubes.sln"
+    "dotnet.defaultSolution": "PPG_Tubes.sln",
+    "[csharp]": {
+        "editor.suggest.showSnippets": true,
+        "editor.suggestSelection": "first",
+        "editor.formatOnSave": true
+    },
+    "editor.suggest.showSnippets": true,
+    "editor.suggest.showWords": true,
+    "omnisharp.enableEditorConfigSupport": true,
+    "omnisharp.enableRoslynAnalyzers": true
 }

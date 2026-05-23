@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (SceneManager.GetActiveScene().buildIndex != 0 && !GameUIManager.instance.isGameOverScreenActive())
+        if (SceneManager.GetActiveScene().buildIndex == 1 && !GameUIManager.instance.isGameOverScreenActive())
         {
             CountdownTimer();
         }

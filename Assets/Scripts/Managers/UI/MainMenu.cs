@@ -5,12 +5,16 @@ using UnityEngine.UI;
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] GameObject mainMenuButtonsContainer;
+    public bool playMusic = true;
     // [SerializeField] Slider masterSlider;
     // [SerializeField] Slider musicSlider;
     // [SerializeField] Slider sfxSlider;
     private void Start()
     {
-        MusicManager.instance.PlayMusicTrack("MainMenu", 1f);
+        if (playMusic)
+        {
+            MusicManager.instance.PlayMusicTrack("MainMenu", 1f);
+        }
         // setSliderValues();
     }
 
@@ -24,7 +28,10 @@ public class MainMenu : MonoBehaviour
     {
         bool isActive = container.activeSelf;
         container.SetActive(!isActive);
-        ToggleInteractableButtons(mainMenuButtonsContainer, isActive);
+        if (mainMenuButtonsContainer != null)
+        {
+            ToggleInteractableButtons(mainMenuButtonsContainer, isActive);
+        }
         // setSliderValues();
     }
 
