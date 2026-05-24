@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using TMPro;
 using UnityEngine.UI;
 
 public class Pan : MonoBehaviour
@@ -14,7 +12,7 @@ public class Pan : MonoBehaviour
     [SerializeField] Slider cookProgressSlider;
     [SerializeField] Slider safeZoneSlider;
     public float cookValue;
-    public Vector2 szValue;
+    public Vector2 safeZoneRange;
     public float cookingSpeed = 5f; // how fast the egg cooks
     public float safeZoneTolerance = 0.1f; // How much time before/after the perfect cook time is still considered "safe"
     private bool isHolding;
@@ -29,12 +27,26 @@ public class Pan : MonoBehaviour
         {
             initialEggColour = eggColour.color;
         }
-        szValue = new Vector2(safeZoneSlider.value - safeZoneTolerance, safeZoneSlider.value + safeZoneTolerance);
+        safeZoneRange = new Vector2(safeZoneSlider.value - safeZoneTolerance, safeZoneSlider.value + safeZoneTolerance);
         cookValue = cookProgressSlider.value;
     }
 
     void Update()
     {
+        // Handle mobile touch input
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                OnTouchDown();
+            }
+            else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+            {
+                OnTouchUp();
+            }
+        }
+
         if (isHolding)
         {
             cookProgressSlider.value += Time.deltaTime * cookingSpeed;
@@ -59,7 +71,7 @@ public class Pan : MonoBehaviour
                 eggColour.color = target;
             }
 
-            if (cookProgressSlider.value > szValue.y)
+            if (cookProgressSlider.value > safeZoneRange.y)
             {
                 BurnEgg();
             }
@@ -80,11 +92,11 @@ public class Pan : MonoBehaviour
         if (eggBurned && eggCooked) return;
         isHolding = false;
         Debug.Log("Holding stopped.");
-        if (cookProgressSlider.value < szValue.x)
+        if (cookProgressSlider.value < safeZoneRange.x)
         {
             UnderCooked();
         }
-        else if (cookProgressSlider.value > szValue.y)
+        else if (cookProgressSlider.value > safeZoneRange.y)
         {
             BurnEgg();
         }
@@ -93,6 +105,34 @@ public class Pan : MonoBehaviour
             Cooked();
         }
         // If holdTimer >= burnTime, the egg is already burned in Update(), so no need to handle it here.
+    }
+
+    void OnTouchDown()
+    {
+        if (!eggBurned && !eggCooked)
+        {
+            isHolding = true;
+            Debug.Log("Touch holding started.");
+        }
+    }
+
+    void OnTouchUp()
+    {
+        if (eggBurned && eggCooked) return;
+        isHolding = false;
+        Debug.Log("Touch holding stopped.");
+        if (cookProgressSlider.value < safeZoneRange.x)
+        {
+            UnderCooked();
+        }
+        else if (cookProgressSlider.value > safeZoneRange.y)
+        {
+            BurnEgg();
+        }
+        else
+        {
+            Cooked();
+        }
     }
 
     void UnderCooked()

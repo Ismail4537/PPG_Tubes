@@ -45,6 +45,16 @@ public class Clock : MonoBehaviour
             OnUserPress();
         }
 
+        // Mobile touch input
+        if (!hasPressed && Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                OnUserPress();
+            }
+        }
+
         // If time passed target + tolerance with no correct press -> game over
         if (!hasPressed && currentTimeSeconds > targetTimeSeconds + toleranceSeconds)
         {
