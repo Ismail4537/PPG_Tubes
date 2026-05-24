@@ -48,12 +48,15 @@ public class SceneController : MonoBehaviour
         Destroy(GameUIManager.instance.gameObject);
     }
 
-    public void ToGameScene(int sceneID)
+    public void ToGameScene(int sceneID, bool resetData)
     {
         Debug.Log("Loading Game Scene ID: " + sceneID);
         SceneManager.LoadScene(sceneID);
         Time.timeScale = 1;
-        GameManager.instance.resetGameData();
+        if (resetData)
+        {
+            GameManager.instance.resetGameData();
+        }
     }
 
     public void ToNextScene()
@@ -64,7 +67,23 @@ public class SceneController : MonoBehaviour
 
         if (nextSceneIndex <= maxScene && nextSceneIndex >= 0)
         {
-            ToGameScene(nextSceneIndex);
+            ToGameScene(nextSceneIndex, true);
+        }
+        else
+        {
+            ToMainMenu();
+        }
+    }
+
+    public void ToNextScene(bool resetData)
+    {
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        int nextSceneIndex = currentSceneIndex + 1;
+        Debug.Log("Next Scene Index: " + nextSceneIndex);
+
+        if (nextSceneIndex <= maxScene && nextSceneIndex >= 0)
+        {
+            ToGameScene(nextSceneIndex, resetData);
         }
         else
         {

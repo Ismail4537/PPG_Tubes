@@ -9,7 +9,6 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] GameObject gameOverScreen;
     [SerializeField] Slider timeSlider;
     [SerializeField] TextMeshProUGUI timeText;
-    [SerializeField] GameObject[] miniGames;
     // [SerializeField] Button nextStageButton;
     void Awake()
     {
@@ -27,7 +26,6 @@ public class GameUIManager : MonoBehaviour
     void Start()
     {
         connectInGameObjects();
-
         toggleHUD(true);
     }
 
@@ -77,7 +75,7 @@ public class GameUIManager : MonoBehaviour
 
     void connectInGameObjects()
     {
-        GameManager.instance.setMiniGames(miniGames);
+        Debug.Log("Connecting in-game UI objects to GameManager");
         GameManager.instance.timeSlider = timeSlider;
         GameManager.instance.timeText = timeText;
         timeSlider.maxValue = GameManager.instance.timeLimit;
