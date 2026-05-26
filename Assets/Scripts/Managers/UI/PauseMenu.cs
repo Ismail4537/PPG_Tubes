@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 public class PauseMenuController : MonoBehaviour
 {
@@ -27,21 +28,26 @@ public class PauseMenuController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            // Toggle pause menu
-            if (container.activeSelf)
-            {
-                // Jika pause menu sedang aktif, tutup pause menu
-                ResumeGame();
-            }
-            else
-            {
-                // Jika pause menu tidak aktif, buka pause menu
-                Pause();
-            }
-        }
+
     }
+
+    // public void InputPause(InputAction.CallbackContext context)
+    // {
+    //     if (context.started)
+    //     {
+    //         // Toggle pause menu
+    //         if (container.activeSelf)
+    //         {
+    //             // Jika pause menu sedang aktif, tutup pause menu
+    //             ResumeGame();
+    //         }
+    //         else
+    //         {
+    //             // Jika pause menu tidak aktif, buka pause menu
+    //             Pause();
+    //         }
+    //     }
+    // }
 
     public void Pause()
     {

@@ -1,7 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Android;
+using UnityEngine.InputSystem;
+using System;
 
-public class Pan : MonoBehaviour
+public class Pan : MiniGame
 {
     [SerializeField] SpriteRenderer eggColour;
     [SerializeField] Color burntColour = new Color(0.25f, 0.12f, 0.05f, 1f);
@@ -11,6 +14,7 @@ public class Pan : MonoBehaviour
     [SerializeField] Color cookedColour = new Color(1f, 0.9f, 0.6f, 1f);
     [SerializeField] Slider cookProgressSlider;
     [SerializeField] Slider safeZoneSlider;
+    [SerializeField] GameObject debugPoint;
     public float cookValue;
     public Vector2 safeZoneRange;
     public float cookingSpeed = 5f; // how fast the egg cooks
@@ -20,32 +24,44 @@ public class Pan : MonoBehaviour
     private bool eggCooked;
     private Color initialEggColour;
     // Threshold in the cook curve to determine when the egg is considered undercooked vs cooked vs burnt
+    public InputAction press, screenPos;
+    Vector3 curScreenPos;
+    Camera mainCam;
 
     void Awake()
     {
-        if (eggColour != null)
-        {
-            initialEggColour = eggColour.color;
-        }
         safeZoneRange = new Vector2(safeZoneSlider.value - safeZoneTolerance, safeZoneSlider.value + safeZoneTolerance);
         cookValue = cookProgressSlider.value;
     }
 
+    void Start()
+    {
+        mainCam = Camera.main;
+        screenPos.Enable();
+        press.Enable();
+        screenPos.performed += context =>
+        {
+            curScreenPos = context.ReadValue<Vector2>();
+        };
+        if (eggColour != null)
+        {
+            initialEggColour = eggColour.color;
+        }
+    }
+
     void Update()
     {
-        // Handle mobile touch input
-        if (Input.touchCount > 0)
+        press.performed += _ =>
         {
-            Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Began)
-            {
+            if (checkClick())
                 OnTouchDown();
-            }
-            else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
-            {
+        };
+
+        press.canceled += _ =>
+        {
+            if (checkClick())
                 OnTouchUp();
-            }
-        }
+        };
 
         if (isHolding)
         {
@@ -73,38 +89,9 @@ public class Pan : MonoBehaviour
 
             if (cookProgressSlider.value > safeZoneRange.y)
             {
-                BurnEgg();
+                fail(true);
             }
         }
-    }
-
-    void OnMouseDown()
-    {
-        if (!eggBurned && !eggCooked)
-        {
-            isHolding = true;
-            Debug.Log("Holding started.");
-        }
-    }
-
-    void OnMouseUp()
-    {
-        if (eggBurned && eggCooked) return;
-        isHolding = false;
-        Debug.Log("Holding stopped.");
-        if (cookProgressSlider.value < safeZoneRange.x)
-        {
-            UnderCooked();
-        }
-        else if (cookProgressSlider.value > safeZoneRange.y)
-        {
-            BurnEgg();
-        }
-        else
-        {
-            Cooked();
-        }
-        // If holdTimer >= burnTime, the egg is already burned in Update(), so no need to handle it here.
     }
 
     void OnTouchDown()
@@ -123,11 +110,12 @@ public class Pan : MonoBehaviour
         Debug.Log("Touch holding stopped.");
         if (cookProgressSlider.value < safeZoneRange.x)
         {
-            UnderCooked();
+            fail(false);
+
         }
         else if (cookProgressSlider.value > safeZoneRange.y)
         {
-            BurnEgg();
+            fail(true);
         }
         else
         {
@@ -135,62 +123,42 @@ public class Pan : MonoBehaviour
         }
     }
 
-    void UnderCooked()
-    {
-        if (TryGetGameManagerTrigger()) return;
-        Debug.Log("Egg is undercooked!");
-    }
-
     void Cooked()
     {
-        Debug.Log("Egg is cooked!");
         eggCooked = true;
-        if (TryGetSceneControllerNext()) return;
-        Debug.Log("Success! Egg cooked within safe zone.");
-        // You can add additional logic here for when the egg is perfectly cooked
+        screenPos.Disable();
+        press.Disable();
+        TriggerSuccess();
     }
 
-    private void BurnEgg()
+    void fail(bool isBurnt)
     {
-        if (eggColour == null)
+        string msg;
+        if (isBurnt)
         {
-            Debug.LogWarning("Egg SpriteRenderer is not assigned on the Pan script.");
-            return;
+            msg = "Egg is burnt!";
         }
-
-        // Ensure final burnt color is applied and stop further cooking updates
-        eggBurned = true;
-        if (TryGetGameManagerTrigger()) return;
-        Debug.Log("Egg burned!");
+        else
+        {
+            msg = "Egg is Udercooked";
+        }
+        screenPos.Disable();
+        press.Disable();
+        TriggerGameOver(msg);
     }
 
-    bool TryGetSceneControllerNext()
+    bool checkClick()
     {
-        try
+        Ray ray = mainCam.ScreenPointToRay(curScreenPos);
+        RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
+        if (hit.collider != null)
         {
-            var sc = SceneController.instance;
-            if (sc != null)
+            if (hit.collider.transform == transform)
             {
-                sc.ToNextScene(false);
                 return true;
             }
+            else { return false; }
         }
-        catch { }
-        return false;
-    }
-
-    bool TryGetGameManagerTrigger()
-    {
-        try
-        {
-            var gm = GameManager.instance;
-            if (gm != null)
-            {
-                gm.triggerGameOver();
-                return true;
-            }
-        }
-        catch { }
-        return false;
+        else { return false; }
     }
 }

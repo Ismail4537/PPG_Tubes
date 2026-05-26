@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.Events;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
-public class Clock : MonoBehaviour
+public class Clock : MiniGame
 {
     [Header("Start time (MM:SS)")]
     public int startMinutes = 5;
@@ -18,17 +18,16 @@ public class Clock : MonoBehaviour
 
     [Header("UI")]
     public TextMeshProUGUI timeTextTMP;
-    public Text timeTextLegacy;
-
     float currentTimeSeconds;
     float targetTimeSeconds;
-    bool hasPressed = false;
-    bool outcomeTriggered = false;
+    Vector2 SafeZoneRange;
 
     void Start()
     {
         currentTimeSeconds = startMinutes * 60 + startSeconds;
         targetTimeSeconds = targetMinutes * 60 + targetSeconds;
+        SafeZoneRange = new Vector2(targetTimeSeconds - toleranceSeconds, targetTimeSeconds + toleranceSeconds);
+        // Debug.Log(SafeZoneRange);
         UpdateDisplay();
     }
 
@@ -38,59 +37,30 @@ public class Clock : MonoBehaviour
 
         currentTimeSeconds += Time.deltaTime;
         UpdateDisplay();
-
-        // Check for input (spacebar or left mouse) or mouse/tap on object
-        if (!hasPressed && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))
-        {
-            OnUserPress();
-        }
-
-        // Mobile touch input
-        if (!hasPressed && Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Began)
-            {
-                OnUserPress();
-            }
-        }
-
-        // If time passed target + tolerance with no correct press -> game over
-        if (!hasPressed && currentTimeSeconds > targetTimeSeconds + toleranceSeconds)
-        {
-            TriggerGameOver("Missed the exact 6:00 window");
-        }
     }
 
     void UpdateDisplay()
     {
-        int minutes = (int)(currentTimeSeconds / 60f);
-        int seconds = (int)(currentTimeSeconds % 60f);
-        string txt = string.Format("{0:D2}:{1:D2}", minutes, seconds);
+        string txt = FormatTime(currentTimeSeconds);
         if (timeTextTMP != null) timeTextTMP.text = txt;
-        if (timeTextLegacy != null) timeTextLegacy.text = txt;
     }
 
     // Call this from UI Button or when the player clicks/taps the clock GameObject
     public void OnUserPress()
     {
         if (outcomeTriggered) return;
-        hasPressed = true;
-
-        float diff = Mathf.Abs(currentTimeSeconds - targetTimeSeconds);
-        if (diff <= toleranceSeconds)
+        if (currentTimeSeconds < SafeZoneRange.x || currentTimeSeconds > SafeZoneRange.y)
         {
+            // Debug.Log(currentTimeSeconds);
+            // Debug.Log("Fail");
             TriggerSuccess();
         }
         else
         {
+            // Debug.Log(currentTimeSeconds);
+            // Debug.Log("Success");
             TriggerGameOver("Pressed at wrong time: " + FormatTime(currentTimeSeconds));
         }
-    }
-
-    void OnMouseDown()
-    {
-        OnUserPress();
     }
 
     string FormatTime(float t)
@@ -98,51 +68,5 @@ public class Clock : MonoBehaviour
         int m = (int)(t / 60f);
         int s = (int)(t % 60f);
         return string.Format("{0:D2}:{1:D2}", m, s);
-    }
-
-    void TriggerSuccess()
-    {
-        outcomeTriggered = true;
-        // Fallback behavior if you have a SceneController
-        if (TryGetSceneControllerNext()) return;
-        Debug.Log("Success! Pressed exactly at target time.");
-    }
-
-    void TriggerGameOver(string reason = null)
-    {
-        outcomeTriggered = true;
-        if (!string.IsNullOrEmpty(reason)) Debug.Log("GameOver: " + reason);
-        // Fallback behavior if you have a GameManager
-        if (TryGetGameManagerTrigger()) return;
-    }
-
-    bool TryGetSceneControllerNext()
-    {
-        try
-        {
-            var sc = SceneController.instance;
-            if (sc != null)
-            {
-                sc.ToNextScene(false);
-                return true;
-            }
-        }
-        catch { }
-        return false;
-    }
-
-    bool TryGetGameManagerTrigger()
-    {
-        try
-        {
-            var gm = GameManager.instance;
-            if (gm != null)
-            {
-                gm.triggerGameOver();
-                return true;
-            }
-        }
-        catch { }
-        return false;
     }
 }
