@@ -53,13 +53,14 @@ public class Clock : MiniGame
         {
             // Debug.Log(currentTimeSeconds);
             // Debug.Log("Fail");
-            TriggerSuccess();
+            TriggerGameOver("Pressed at wrong time: " + FormatTime(currentTimeSeconds));
+            Debug.Log("Cur Time : " + currentTimeSeconds + " Safe zone time : " + SafeZoneRange.x + " ," + SafeZoneRange.y);
         }
         else
         {
             // Debug.Log(currentTimeSeconds);
             // Debug.Log("Success");
-            TriggerGameOver("Pressed at wrong time: " + FormatTime(currentTimeSeconds));
+            TriggerSuccess();
         }
     }
 

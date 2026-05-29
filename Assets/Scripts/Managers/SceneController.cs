@@ -87,7 +87,7 @@ public class SceneController : MonoBehaviour
         }
         else
         {
-            ToMainMenu();
+            LoadScene(1);
         }
     }
 }
