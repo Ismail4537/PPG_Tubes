@@ -8,11 +8,8 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public Slider timeSlider;
     public TextMeshProUGUI timeText;
-    public float timeLimit = 100f;
-    float duration = 100f;
     void Awake()
     {
-        duration = timeLimit;
         if (instance == null)
         {
             instance = this;
@@ -37,7 +34,7 @@ public class GameManager : MonoBehaviour
             {
                 if (!GameUIManager.instance.isGameOverScreenActive())
                 {
-                    CountdownTimer();
+
                 }
             }
         }
@@ -76,7 +73,6 @@ public class GameManager : MonoBehaviour
     public void resetGameData()
     {
         Debug.Log("Resetting Game Data");
-        duration = timeLimit;
 
     }
 
@@ -84,16 +80,5 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Saving Current Stage Data");
         string stageKey = "Stage_" + SceneManager.GetActiveScene().buildIndex;
-    }
-
-    void CountdownTimer()
-    {
-        duration -= Time.deltaTime;
-        timeSlider.value = duration;
-        timeText.text = Mathf.CeilToInt(duration).ToString();
-        if (duration <= 0)
-        {
-            GameManager.instance.triggerGameOver();
-        }
     }
 }

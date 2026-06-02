@@ -3,15 +3,18 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Topping
+  - Plate
+  - Pizza
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Handle
+  - Pizza
   - Water
   - UI
-  - 
+  - Plate
   - 
   - 
   - 
@@ -40,4 +43,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Topping
+    uniqueID: 1195136147
+    locked: 0
+  - name: New Layer 2
+    uniqueID: 4264813041
     locked: 0

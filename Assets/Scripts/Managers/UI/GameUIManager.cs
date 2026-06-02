@@ -7,25 +7,14 @@ public class GameUIManager : MonoBehaviour
     public static GameUIManager instance;
     [SerializeField] GameObject HUD;
     [SerializeField] GameObject gameOverScreen;
-    [SerializeField] Slider timeSlider;
-    [SerializeField] TextMeshProUGUI timeText;
     // [SerializeField] Button nextStageButton;
     void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+
     }
 
     void Start()
     {
-        connectInGameObjects();
         toggleHUD(true);
     }
 
@@ -71,14 +60,6 @@ public class GameUIManager : MonoBehaviour
         Debug.Log("Main Menu Button Clicked");
         gameOverScreen.SetActive(false);
         SceneController.instance.ToMainMenu();
-    }
-
-    void connectInGameObjects()
-    {
-        Debug.Log("Connecting in-game UI objects to GameManager");
-        GameManager.instance.timeSlider = timeSlider;
-        GameManager.instance.timeText = timeText;
-        timeSlider.maxValue = GameManager.instance.timeLimit;
     }
 
     // public void NextStageBtn()
