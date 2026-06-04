@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cf8a1116fbacb2488f6015ba16bd5e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plateLayer:
+  placeableLayer:
     serializedVersion: 2
     m_Bits: 64
 --- !u!114 &2801897856961412817
@@ -116,6 +116,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   toppings: []
   cooked: 0
+  served: 0
   cookedSprite: {fileID: 21300000, guid: 29bfa921985b9734797fcc25d5d70bec, type: 3}
 --- !u!58 &2415728241957496665
 CircleCollider2D:

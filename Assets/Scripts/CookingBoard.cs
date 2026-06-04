@@ -2,51 +2,29 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class CookingBoard : MonoBehaviour, IDragHandler
+public class CookingBoard : MonoBehaviour, IDragHandler, IInteractAble
 {
-    public InputAction touch, pos;
-    Vector3 currPos;
-    Camera mainCam;
     bool isHolded;
     Vector2 initPos;
     public bool isCooking = false;
     public GameObject currPizza;
     public GameObject pizzaPref;
     public Transform newPizzaPos;
+    static public CookingBoard instance;
     void Awake()
     {
-        mainCam = Camera.main;
-        touch.Enable();
-        pos.Enable();
         initPos = transform.position;
     }
     void Start()
     {
+        instance = this;
         currPizza = Instantiate(pizzaPref, newPizzaPos.position, Quaternion.identity);
         currPizza.transform.parent = transform;
-        pos.performed += context =>
-        {
-            currPos = context.ReadValue<Vector2>();
-        };
     }
 
     void Update()
     {
-        touch.performed += _ =>
-        {
-            if (checkClick())
-            {
-                isHolded = true;
-            }
-        };
-        touch.canceled += _ =>
-        {
-            isHolded = false;
-            if (!isCooking)
-            {
-                transform.position = initPos;
-            }
-        };
+
     }
     public void OnDrag(PointerEventData eventData)
     {
@@ -62,18 +40,23 @@ public class CookingBoard : MonoBehaviour, IDragHandler
         transform.position = initPos;
     }
 
-    bool checkClick()
+    public void OnInteract()
     {
-        Ray ray = mainCam.ScreenPointToRay(currPos);
-        RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
-        if (hit.collider != null)
+        isHolded = true;
+    }
+
+    public void NotInteract()
+    {
+        isHolded = false;
+        if (!isCooking)
         {
-            if (hit.collider.transform == transform)
-            {
-                return true;
-            }
-            else { return false; }
+            transform.position = initPos;
         }
-        else { return false; }
+    }
+
+    public void newPizza()
+    {
+        currPizza = Instantiate(pizzaPref, newPizzaPos.position, Quaternion.identity);
+        currPizza.transform.parent = transform;
     }
 }

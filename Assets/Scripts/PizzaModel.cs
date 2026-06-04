@@ -4,6 +4,7 @@ public class PizzaModel : MonoBehaviour
 {
     public GameObject[] toppings;
     public bool cooked;
+    public bool served;
     public Sprite cookedSprite;
 
     public void AddTopping(GameObject topping)

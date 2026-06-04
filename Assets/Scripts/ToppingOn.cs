@@ -1,18 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Plate : MonoBehaviour
+public class ToppingOn : MonoBehaviour
 {
+    public string toppingName;
     // Start is called before the first frame update
     void Start()
     {
-        
+        toppingName = gameObject.name;
+        Debug.Log(toppingName);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
