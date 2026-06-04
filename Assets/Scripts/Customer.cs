@@ -1,7 +1,13 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Customer : MonoBehaviour
 {
+    public float patienceTimer;
+    public float patienceDuration;
+    public Slider patienceBar;
+    public GameObject orderItemPref;
+    public GameObject orderUI;
     public GameObject[] wantedToppings;
     public GameObject[] optionalToppings;
     public GameObject[] alwaysToppings; //Topping yang selalu ada di pizza, misal saus dan keju
@@ -12,12 +18,74 @@ public class Customer : MonoBehaviour
     {
         SetPossibleTopping();
         ReGenerateWantedTopping();
+        ResetPatience();
     }
 
     // Update is called once per frame
     void Update()
     {
+        PatienceCountdown();
+    }
 
+    void PatienceCountdown()
+    {
+        if (patienceBar == null)
+            return;
+
+        if (patienceDuration <= 0f)
+            return;
+
+        if (patienceTimer <= 0f)
+            return;
+
+        patienceTimer -= Time.deltaTime;
+        patienceTimer = Mathf.Max(patienceTimer, 0f);
+
+        patienceBar.value = patienceTimer;
+
+        if (patienceTimer <= 0f)
+        {
+            Debug.Log("Customer patience ran out.");
+            NotSastified();
+        }
+    }
+
+    void ResetPatience()
+    {
+        patienceTimer = patienceDuration;
+        SetupPatienceBar();
+    }
+
+    void SetupPatienceBar()
+    {
+        if (patienceBar == null)
+            return;
+
+        patienceBar.maxValue = patienceDuration;
+        patienceBar.value = patienceTimer;
+    }
+
+    void DisplayOrder()
+    {
+        RectTransform orderTransform = orderUI.GetComponent<RectTransform>();
+        orderTransform.sizeDelta = new Vector2(5, 5);
+        // Clear existing order UI
+        foreach (Transform child in orderUI.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // Display wanted toppings
+        for (int i = 0; i < wantedToppings.Length; i++)
+        {
+            if (wantedToppings[i] != null)
+            {
+                GameObject item = Instantiate(orderItemPref, orderUI.transform);
+                item.GetComponent<Image>().sprite = wantedToppings[i].GetComponent<ToppingOn>().iconSprite;
+            }
+        }
+        ;
+        orderTransform.sizeDelta = new Vector2(orderTransform.sizeDelta.x, orderTransform.sizeDelta.y * wantedToppings.Length);
     }
     public void CheckingPizza(PizzaModel pizza)
     {
@@ -139,20 +207,19 @@ public class Customer : MonoBehaviour
             usedOptional[rand] = true;
             wantedToppings[index++] = optionalToppings[rand];
         }
+        DisplayOrder();
     }
 
     void Sastified()
     {
-        SwitchView.instance.SwitchTo(0);
-        CookingBoard.instance.newPizza();
+        CookingBoard.instance.NewPizza();
         ReGenerateWantedTopping();
         Debug.Log("Thank You");
     }
 
     void NotSastified()
     {
-        SwitchView.instance.SwitchTo(0);
-        CookingBoard.instance.newPizza();
+        CookingBoard.instance.NewPizza();
         Debug.Log("Its not the Pizza that i wanted");
     }
 }

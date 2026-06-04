@@ -814,6 +814,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d394d132051b4a749bc66ba8797c073d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  iconSprite: {fileID: 21300000, guid: 5e1156137c101354b9dbc6a8dfc6d218, type: 3}
   toppingName: 
 --- !u!1 &6456090952339596821
 GameObject:

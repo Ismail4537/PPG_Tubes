@@ -97,4 +97,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d394d132051b4a749bc66ba8797c073d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  iconSprite: {fileID: 21300000, guid: afff8ab536248c74686bb8ada350845b, type: 3}
   toppingName: 

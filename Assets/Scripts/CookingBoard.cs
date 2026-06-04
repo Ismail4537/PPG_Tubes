@@ -54,7 +54,7 @@ public class CookingBoard : MonoBehaviour, IDragHandler, IInteractAble
         }
     }
 
-    public void newPizza()
+    public void NewPizza()
     {
         currPizza = Instantiate(pizzaPref, newPizzaPos.position, Quaternion.identity);
         currPizza.transform.parent = transform;

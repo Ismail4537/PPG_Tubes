@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class ToppingOn : MonoBehaviour
 {
+    public Sprite iconSprite;
     public string toppingName;
     // Start is called before the first frame update
     void Start()

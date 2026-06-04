@@ -7,6 +7,7 @@ TagManager:
   - Topping
   - Plate
   - Pizza
+  - Trash
   layers:
   - Default
   - TransparentFX
