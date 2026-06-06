@@ -8,6 +8,7 @@ TagManager:
   - Plate
   - Pizza
   - Trash
+  - TipPos
   layers:
   - Default
   - TransparentFX

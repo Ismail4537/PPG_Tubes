@@ -4,8 +4,11 @@ public class PizzaModel : MonoBehaviour
 {
     public GameObject[] toppings;
     public bool cooked;
+    public float cookTime;
+    public bool burnt;
     public bool served;
     public Sprite cookedSprite;
+    public Color burntColor;
 
     public void AddTopping(GameObject topping)
     {

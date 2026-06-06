@@ -45,7 +45,8 @@ public class SceneController : MonoBehaviour
         SceneManager.LoadScene(0);
         Time.timeScale = 1;
         GameManager.instance.resetGameData();
-        Destroy(GameUIManager.instance.gameObject);
+        if (GameUIManager.instance.gameObject != null)
+            Destroy(GameUIManager.instance.gameObject);
     }
 
     public void ToGameScene(int sceneID, bool resetData)

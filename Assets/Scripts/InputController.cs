@@ -5,7 +5,12 @@ using UnityEngine.InputSystem;
 
 public class InputController : MonoBehaviour
 {
-    static public Vector2 touchPos;
+    static public Vector2 touchPos = Vector2.zero;
+    Camera mainCam;
+    void Awake()
+    {
+        mainCam = Camera.main;
+    }
     public void OnTouch(InputAction.CallbackContext ctx)
     {
         if (ctx.started)
@@ -39,7 +44,7 @@ public class InputController : MonoBehaviour
 
     IInteractAble checkInteractAble()
     {
-        Ray ray = Camera.main.ScreenPointToRay(touchPos);
+        Ray ray = mainCam.ScreenPointToRay(touchPos);
         RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
         if (hit.collider != null)
         {

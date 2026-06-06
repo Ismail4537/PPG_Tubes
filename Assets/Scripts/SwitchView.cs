@@ -12,6 +12,7 @@ public class SwitchView : MonoBehaviour, IInteractAble
     {
         mainCam = Camera.main;
         instance = this;
+        SwitchTo(1);
     }
 
     public void SwitchTo(int i)

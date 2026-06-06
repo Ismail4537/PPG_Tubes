@@ -2,11 +2,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class CookingBoard : MonoBehaviour, IDragHandler, IInteractAble
+public class CookingBoard : MonoBehaviour, IDragHandler, IInteractAble, IEndDragHandler
 {
     bool isHolded;
     Vector2 initPos;
-    public bool isCooking = false;
     public GameObject currPizza;
     public GameObject pizzaPref;
     public Transform newPizzaPos;
@@ -28,7 +27,7 @@ public class CookingBoard : MonoBehaviour, IDragHandler, IInteractAble
     }
     public void OnDrag(PointerEventData eventData)
     {
-        if (isHolded && !isCooking && currPizza != null)
+        if (isHolded && currPizza != null)
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             transform.position = new Vector2(mousePos.x, 0);
@@ -48,15 +47,21 @@ public class CookingBoard : MonoBehaviour, IDragHandler, IInteractAble
     public void NotInteract()
     {
         isHolded = false;
-        if (!isCooking)
-        {
-            transform.position = initPos;
-        }
+        transform.position = initPos;
     }
 
     public void NewPizza()
     {
+        if (currPizza != null)
+        {
+            currPizza = null;
+        }
         currPizza = Instantiate(pizzaPref, newPizzaPos.position, Quaternion.identity);
-        currPizza.transform.parent = transform;
+        currPizza.transform.SetParent(transform);
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        SnapBack();
     }
 }

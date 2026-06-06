@@ -7,10 +7,14 @@ public class PizzaController : MonoBehaviour, IDragHandler, IEndDragHandler
     Vector2 initialPos;
     PizzaModel pizzaModel;
     public LayerMask placeableLayer;
+    public float cookTarget;
+    public float burntTarget;
+    SpriteRenderer spriteRenderer;
     void Start()
     {
         initialPos = transform.position;
         pizzaModel = GetComponent<PizzaModel>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -35,13 +39,7 @@ public class PizzaController : MonoBehaviour, IDragHandler, IEndDragHandler
             {
                 Customer cus = hit.collider.GetComponent<Customer>();
                 cus.CheckingPizza(pizzaModel);
-                Destroy(gameObject);
-            }
-            else if (hit.collider.CompareTag("Trash"))
-            {
-                FindObjectOfType<CookingBoard>().currPizza = null;
-                FindObjectOfType<CookingBoard>().NewPizza();
-                Destroy(gameObject);
+                DestroyMe();
             }
             else
             {
@@ -51,6 +49,29 @@ public class PizzaController : MonoBehaviour, IDragHandler, IEndDragHandler
         else
         {
             transform.position = initialPos;
+        }
+    }
+
+    void DestroyMe()
+    {
+        CookingBoard.instance.NewPizza();
+        Destroy(GameObject.Find("Tutorial"));
+        Destroy(gameObject);
+    }
+
+    public void CookPizza()
+    {
+        pizzaModel.cookTime += Time.deltaTime;
+        if (pizzaModel.cookTime > cookTarget)
+        {
+            pizzaModel.cooked = true;
+            spriteRenderer.sprite = pizzaModel.cookedSprite;
+
+        }
+        if (pizzaModel.cookTime > burntTarget)
+        {
+            pizzaModel.burnt = true;
+            spriteRenderer.color = pizzaModel.burntColor;
         }
     }
 }

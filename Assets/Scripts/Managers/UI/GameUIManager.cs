@@ -10,7 +10,7 @@ public class GameUIManager : MonoBehaviour
     // [SerializeField] Button nextStageButton;
     void Awake()
     {
-
+        instance = this;
     }
 
     void Start()

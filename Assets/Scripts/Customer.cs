@@ -3,19 +3,27 @@ using UnityEngine.UI;
 
 public class Customer : MonoBehaviour
 {
+    public bool served;
+    public bool ordering;
+    public float unsatisfactionPenalty = 1;
+    public float unsatisfactionMultiplier = 1;
     public float patienceTimer;
     public float patienceDuration;
     public Slider patienceBar;
+    public GameObject tipPref;
+    public float minTip = 1f;
+    public float maxTip = 10f;
     public GameObject orderItemPref;
     public GameObject orderUI;
     public GameObject[] wantedToppings;
     public GameObject[] optionalToppings;
     public GameObject[] alwaysToppings; //Topping yang selalu ada di pizza, misal saus dan keju
     GameObject[] possibleToppings; //Semua topping yang mungkin ada di pizza, termasuk alwaysToppings dan optionalToppings
-
+    Animator animator;
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();
         SetPossibleTopping();
         ReGenerateWantedTopping();
         ResetPatience();
@@ -29,24 +37,22 @@ public class Customer : MonoBehaviour
 
     void PatienceCountdown()
     {
+        if (!ordering)
+            return;
         if (patienceBar == null)
             return;
 
         if (patienceDuration <= 0f)
             return;
-
-        if (patienceTimer <= 0f)
-            return;
-
-        patienceTimer -= Time.deltaTime;
-        patienceTimer = Mathf.Max(patienceTimer, 0f);
+        if (patienceTimer > 0f)
+            patienceTimer -= Time.deltaTime;
 
         patienceBar.value = patienceTimer;
 
         if (patienceTimer <= 0f)
         {
             Debug.Log("Customer patience ran out.");
-            NotSastified();
+            OutOfPatience();
         }
     }
 
@@ -89,6 +95,12 @@ public class Customer : MonoBehaviour
     }
     public void CheckingPizza(PizzaModel pizza)
     {
+        if (!ordering || served) return;
+        if (!pizza.cooked || pizza.burnt)
+        {
+            NotSastified();
+            return;
+        }
         if (pizza == null || pizza.toppings == null)
         {
             Debug.Log("CheckingPizza: pizza or pizza.toppings is null");
@@ -212,14 +224,62 @@ public class Customer : MonoBehaviour
 
     void Sastified()
     {
-        CookingBoard.instance.NewPizza();
-        ReGenerateWantedTopping();
+        served = true;
+        animator.SetBool("Served", true);
+        animator.SetBool("Sastified", true);
+        float tipAmount = CalculateTipAmount();
+        GiveTips(tipAmount);
         Debug.Log("Thank You");
+    }
+
+    float CalculateTipAmount()
+    {
+        if (patienceDuration <= 0f)
+            return minTip;
+
+        float speedFactor = Mathf.Clamp01(patienceTimer / patienceDuration);
+        float tipAmount = Mathf.Lerp(minTip, maxTip, speedFactor);
+        return Mathf.Max(0f, Mathf.Round(tipAmount));
     }
 
     void NotSastified()
     {
-        CookingBoard.instance.NewPizza();
+        animator.SetTrigger("Unsatisfied");
+        patienceTimer -= unsatisfactionPenalty * unsatisfactionMultiplier;
+        unsatisfactionMultiplier += 1f;
         Debug.Log("Its not the Pizza that i wanted");
+    }
+
+    void OutOfPatience()
+    {
+        served = true;
+        animator.SetBool("Served", true);
+        animator.SetBool("Sastified", false);
+        SwitchView.instance.SwitchTo(1);
+        Debug.Log("This takes too long im leaving");
+    }
+
+    public void Leave()
+    {
+        Destroy(gameObject);
+        FindAnyObjectByType<NewCustomerSpawner>().SpawnCutomer();
+    }
+
+    void GiveTips(float amount)
+    {
+        var tipPosObject = GameObject.Find("TipPos");
+        var spawnPosition = tipPosObject != null ? tipPosObject.transform.position : transform.position;
+        GameObject tips = Instantiate(tipPref, spawnPosition, Quaternion.identity);
+        tips.GetComponent<Tips>().SetValue(amount);
+    }
+
+    public void Ordering()
+    {
+        ordering = true;
+    }
+
+    public void TriggerGameOver()
+    {
+        GameManager.instance.triggerGameOver();
     }
 }
