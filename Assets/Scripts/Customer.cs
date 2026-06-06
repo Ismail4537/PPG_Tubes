@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class Customer : MonoBehaviour
 {
+    public bool servingAproval = false;
     public bool served;
     public bool ordering;
     public float unsatisfactionPenalty = 1;
@@ -11,6 +12,7 @@ public class Customer : MonoBehaviour
     public float patienceDuration;
     public Slider patienceBar;
     public GameObject tipPref;
+    public GameObject aprov;
     public float minTip = 1f;
     public float maxTip = 10f;
     public GameObject orderItemPref;
@@ -95,7 +97,7 @@ public class Customer : MonoBehaviour
     }
     public void CheckingPizza(PizzaModel pizza)
     {
-        if (!ordering || served) return;
+        if (!ordering || served || !servingAproval) return;
         if (!pizza.cooked || pizza.burnt)
         {
             NotSastified();
@@ -281,5 +283,19 @@ public class Customer : MonoBehaviour
     public void TriggerGameOver()
     {
         GameManager.instance.triggerGameOver();
+    }
+
+    public void Aproval(bool status)
+    {
+        Destroy(aprov);
+        if (status)
+        {
+            servingAproval = true;
+        }
+        else
+        {
+            servingAproval = false;
+            animator.SetBool("Aproval", false);
+        }
     }
 }

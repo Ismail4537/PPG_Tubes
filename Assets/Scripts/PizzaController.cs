@@ -30,6 +30,7 @@ public class PizzaController : MonoBehaviour, IDragHandler, IEndDragHandler
         {
             if (pizzaModel.cooked && hit.collider.CompareTag("Plate"))
             {
+                initialPos = hit.collider.transform.position;
                 transform.position = hit.collider.transform.position;
                 transform.parent = hit.collider.transform;
                 pizzaModel.served = true;
@@ -38,8 +39,15 @@ public class PizzaController : MonoBehaviour, IDragHandler, IEndDragHandler
             else if (pizzaModel.served && hit.collider.GetComponent<Customer>() != null)
             {
                 Customer cus = hit.collider.GetComponent<Customer>();
-                cus.CheckingPizza(pizzaModel);
-                DestroyMe();
+                if (cus.servingAproval)
+                {
+                    cus.CheckingPizza(pizzaModel);
+                    DestroyMe();
+                }
+                else
+                {
+                    transform.position = initialPos;
+                }
             }
             else
             {
