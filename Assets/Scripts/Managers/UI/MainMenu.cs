@@ -13,7 +13,7 @@ public class MainMenu : MonoBehaviour
     {
         if (playMusic)
         {
-            MusicManager.instance.PlayMusicTrack("MainMenu", 1f);
+            MusicManager.instance.StopMusicTrack();
         }
         // setSliderValues();
     }

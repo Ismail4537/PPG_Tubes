@@ -10,12 +10,12 @@ public class Tips : MonoBehaviour, IInteractAble
 
     public void NotInteract()
     {
-        throw new System.NotImplementedException();
     }
 
     public void OnInteract()
     {
         TipJar.instance.AddTips(value);
+        SFXManager.instance.PlayClip2D("Money");
         Destroy(gameObject);
     }
 

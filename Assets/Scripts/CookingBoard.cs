@@ -16,6 +16,7 @@ public class CookingBoard : MonoBehaviour, IDragHandler, IInteractAble, IEndDrag
     }
     void Start()
     {
+        MusicManager.instance.PlayMusicTrack("Game");
         instance = this;
         currPizza = Instantiate(pizzaPref, newPizzaPos.position, Quaternion.identity);
         currPizza.transform.parent = transform;
@@ -29,7 +30,7 @@ public class CookingBoard : MonoBehaviour, IDragHandler, IInteractAble, IEndDrag
     {
         if (isHolded && currPizza != null)
         {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(InputController.touchPos);
             transform.position = new Vector2(mousePos.x, 0);
         }
     }

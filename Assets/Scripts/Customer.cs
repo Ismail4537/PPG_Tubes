@@ -29,12 +29,13 @@ public class Customer : MonoBehaviour
         SetPossibleTopping();
         ReGenerateWantedTopping();
         ResetPatience();
+        SFXManager.instance.PlayClip2D("Bell");
     }
 
     // Update is called once per frame
     void Update()
     {
-        PatienceCountdown();
+        // PatienceCountdown();
     }
 
     void PatienceCountdown()
@@ -100,13 +101,13 @@ public class Customer : MonoBehaviour
         if (!ordering || served || !servingAproval) return;
         if (!pizza.cooked || pizza.burnt)
         {
-            NotSastified();
+            OutOfPatience();
             return;
         }
         if (pizza == null || pizza.toppings == null)
         {
             Debug.Log("CheckingPizza: pizza or pizza.toppings is null");
-            NotSastified();
+            OutOfPatience();
             return;
         }
 
@@ -181,7 +182,7 @@ public class Customer : MonoBehaviour
         else
         {
             Debug.Log("Customer not satisfied: some wanted toppings missing.");
-            NotSastified();
+            OutOfPatience();
         }
     }
     void SetPossibleTopping()

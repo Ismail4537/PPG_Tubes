@@ -61,7 +61,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc97e175239a6a74db72163ae5c0afd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SFXLib
-  sfxs: []
+  sfxs:
+  - groupID: Money
+    clips:
+    - {fileID: 8300000, guid: 6e3d0c065249ae2428ddd813c6f8db1a, type: 3}
+  - groupID: Toppings
+    clips:
+    - {fileID: 8300000, guid: 5f1a7f608a7f82045b625455e74bf4f1, type: 3}
+    - {fileID: 8300000, guid: e73154b40f3a93d45aaddaef3eefbb93, type: 3}
+    - {fileID: 8300000, guid: 193cd0b8aa6bddf49a1fe1d4aab1b8c5, type: 3}
+    - {fileID: 8300000, guid: 56018101a5f64b14bb813af2f0ea7c20, type: 3}
+  - groupID: Bell
+    clips:
+    - {fileID: 8300000, guid: ccf079fdffbd2764b80e9519f868d60d, type: 3}
+  - groupID: Burnt
+    clips:
+    - {fileID: 8300000, guid: 8685d98fed7b44949937dc3e14974c45, type: 3}
 --- !u!1 &3455853983511207701
 GameObject:
   m_ObjectHideFlags: 0
@@ -105,7 +120,6 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 3191690003681979488, guid: d1e41285f98f49647ab68b582f97d752, type: 2}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

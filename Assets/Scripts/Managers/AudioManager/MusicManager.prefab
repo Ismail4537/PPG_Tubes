@@ -43,7 +43,6 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -7303954223698631708, guid: d1e41285f98f49647ab68b582f97d752, type: 2}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -189,4 +188,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffc2860021ecb68439efdfd8143e27f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MusicLib
-  musicTracks: []
+  musicTracks:
+  - trackName: Game
+    clip: {fileID: 8300000, guid: 00912b77f1235f44492697cfb5f134ff, type: 3}

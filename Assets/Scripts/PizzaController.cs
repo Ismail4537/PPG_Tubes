@@ -19,8 +19,11 @@ public class PizzaController : MonoBehaviour, IDragHandler, IEndDragHandler
 
     public void OnDrag(PointerEventData eventData)
     {
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        transform.position = mousePos;
+        if (pizzaModel.cooked)
+        {
+            // Vector2 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            transform.position = Camera.main.ScreenToWorldPoint(InputController.touchPos) + new Vector3(0, 0, 10);
+        }
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -78,7 +81,11 @@ public class PizzaController : MonoBehaviour, IDragHandler, IEndDragHandler
         }
         if (pizzaModel.cookTime > burntTarget)
         {
-            pizzaModel.burnt = true;
+            if (pizzaModel.burnt != true)
+            {
+                pizzaModel.burnt = true;
+                SFXManager.instance.PlayClip2D("Burnt");
+            }
             spriteRenderer.color = pizzaModel.burntColor;
         }
     }

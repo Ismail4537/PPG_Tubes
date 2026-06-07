@@ -14,8 +14,7 @@ public class ToppingCase : MonoBehaviour, IInteractAble
 
     public void OnInteract()
     {
-        Instantiate(ToppPref, Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()) + new Vector3(0, 0, 10), Quaternion.identity);
+        Instantiate(ToppPref, Camera.main.ScreenToWorldPoint(InputController.touchPos) + new Vector3(0, 0, 10), Quaternion.identity);
+        SFXManager.instance.PlayClip2D("Toppings");
     }
-
-
 }

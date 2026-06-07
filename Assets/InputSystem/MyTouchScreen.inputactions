@@ -1,6 +1,6 @@
 {
     "version": 1,
-    "name": "InputSystemTouchScreen",
+    "name": "MyTouchScreen",
     "maps": [
         {
             "name": "TouchScreen",
@@ -39,30 +39,8 @@
                 },
                 {
                     "name": "",
-                    "id": "653d5eaf-f643-45a5-a7b9-fd3d3faf7e6b",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "PrimaryAction",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "413385e8-954b-4ac7-b72b-89bd50388c2e",
                     "path": "<Touchscreen>/primaryTouch/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "PrimaryPosition",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "eb3a659a-eeed-472b-8162-b4c5af0c491f",
-                    "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
